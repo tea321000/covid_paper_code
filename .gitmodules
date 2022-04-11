@@ -1,0 +1,6 @@
+[submodule "flare21_solution"]
+	path = flare21_solution
+	url = https://github.com/tea321000/flare21_solution
+[submodule "semi_supervised/nnUNet"]
+	path = semi_supervised/nnUNet
+	url = https://github.com/tea321000/new_nnUNet
