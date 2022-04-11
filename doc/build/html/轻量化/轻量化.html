@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>flare_21 &mdash; paper_code 0.1.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="prev" title="test" href="../%E5%8D%8A%E7%9B%91%E7%9D%A3/test.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> paper_code
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">半监督</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../%E5%8D%8A%E7%9B%91%E7%9D%A3/test.html">test</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">轻量化</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">flare_21</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#update-2021-10-23">Update 2021.10.23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#from-source-recommend">from source (recommend)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docker">docker</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#training">Training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inference">Inference</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">paper_code</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>flare_21</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/轻量化/轻量化.md.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="flare-21">
+<h1>flare_21<a class="headerlink" href="#flare-21" title="永久链接至标题"></a></h1>
+<p>The solution for this challenge is based on the nnUNet repository. Give thanks to Fabian’s great work!</p>
+<p>We made three major modifications on top of the original nnUNet:</p>
+<ol class="simple">
+<li><p>In the inference stage, we only used the two samples with the largest flipping difference as test time augmentation (TTA).</p></li>
+<li><p>In the deep supervision block, we only used the decoder output of the last three layers for weighted average.</p></li>
+<li><p>To reduce performance degradation caused by network simplification, we referred to the idea of OHEM and used Top-k loss in cross-entropy to supervise the voxels with the largest difference, which would help maintain the performance as much as possible under the simplified structure.</p></li>
+</ol>
+<section id="update-2021-10-23">
+<h2>Update 2021.10.23<a class="headerlink" href="#update-2021-10-23" title="永久链接至标题"></a></h2>
+<p>I have retrained and uploaded the docker file based on the <a class="reference external" href="https://abdomenct-1k-fully-supervised-learning.grand-challenge.org/">Abdomen1KCT-fullySupervised</a> dataset, which can be obtained through <a class="reference external" href="https://hub.docker.com/r/ttime/abdomen1k">Docker Hub</a> or <a class="reference external" href="https://drive.google.com/file/d/1KrFi6rCQDsce5dWZFS_xaLryOZRCw1iQ/view?usp=sharing">Google Netdisk</a>. The installation method can refer to the docker chapter below but change the instructions to:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># (Optional) download from Docker Hub</span>
+docker pull ttime/abdomen1k
+<span class="c1">#subtask 1</span>
+docker container run --gpus <span class="s2">&quot;all&quot;</span> --name ttime_abdomen1k --rm -v <span class="nv">$PWD</span>/inputs/:/workspace/inputs/ -v <span class="nv">$PWD</span>/outputs/:/workspace/outputs/ ttime_abdomen1k:latest /bin/bash -c <span class="s2">&quot;sh predict.sh 1&quot;</span>
+<span class="c1">#subtask 2</span>
+docker container run --gpus <span class="s2">&quot;all&quot;</span> --name ttime_abdomen1k --rm -v <span class="nv">$PWD</span>/inputs/:/workspace/inputs/ -v <span class="nv">$PWD</span>/outputs/:/workspace/outputs/ ttime_abdomen1k:latest /bin/bash -c <span class="s2">&quot;sh predict.sh 2&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="永久链接至标题"></a></h2>
+<section id="from-source-recommend">
+<h3>from source (recommend)<a class="headerlink" href="#from-source-recommend" title="永久链接至标题"></a></h3>
+<ol>
+<li><p>Clone the directory and its submodule (nnUNet):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone --recursive https://github.com/tea321000/flare21_solution
+<span class="nb">cd</span> flare21_solution
+<span class="c1"># if you are updating an existing checkout</span>
+git submodule sync
+git submodule update --init --recursive --jobs <span class="m">0</span>
+</pre></div>
+</div>
+</li>
+<li><p>Follow the installation instructions of <a class="reference external" href="https://github.com/tea321000/nnUNet/tree/flare_21#installation">my forked repository</a> to install the modified version of nnUNet. Ensure that the relevant environment variables have been set similar to the following commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># some APIs in the recently updated version of batchgenerators have changed, so it is recommended to use the old version</span>
+pip install <span class="nv">batchgenerators</span><span class="o">==</span><span class="m">0</span>.21
+<span class="nb">cd</span> nnUNet
+pip install -e .
+<span class="c1"># you can write environment variables into .bashrc</span>
+<span class="nb">export</span> <span class="nv">nnUNet_raw_data_base</span><span class="o">=</span><span class="s2">&quot;/media/fabian/nnUNet_raw&quot;</span>
+<span class="nb">export</span> <span class="nv">nnUNet_preprocessed</span><span class="o">=</span><span class="s2">&quot;/media/fabian/nnUNet_preprocessed&quot;</span>
+<span class="nb">export</span> <span class="nv">RESULTS_FOLDER</span><span class="o">=</span><span class="s2">&quot;/media/fabian/nnUNet_trained_models&quot;</span>
+<span class="c1"># check if the environment variable has been set</span>
+<span class="nb">echo</span> <span class="nv">$nnUNet_raw_data_base</span>
+<span class="nb">echo</span> <span class="nv">$nnUNet_preprocessed</span>
+<span class="nb">echo</span> <span class="nv">$RESULTS_FOLDER</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="docker">
+<h3>docker<a class="headerlink" href="#docker" title="永久链接至标题"></a></h3>
+<p>We also provide <a class="reference external" href="https://drive.google.com/file/d/1a-atCB_BZkeyzrho2ediEtLzt6rk6YT4/view">docker images</a> for the competition, but this method of installation is not convenient for modification, so it is recommended to use it only for inference. You can use it with the following instructions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker image load &lt; ttime_flare_final.tar.gz
+docker container run --gpus <span class="s2">&quot;all&quot;</span> --name ttime --rm -v <span class="nv">$PWD</span>/inputs/:/workspace/inputs/ -v <span class="nv">$PWD</span>/outputs/:/workspace/outputs/ teamname:latest /bin/bash -c <span class="s2">&quot;sh predict.sh&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="training">
+<h2>Training<a class="headerlink" href="#training" title="永久链接至标题"></a></h2>
+<p>At present, the 2d network has not been completely modified yet, so my solution can only be used to train the 3d network. If you have any ideas or questions, you can post them in the issue or send an email to me. The training instructions of the 3d network is the same as the original <a class="reference external" href="https://github.com/tea321000/nnUNet/tree/flare_21#3d-full-resolution-u-net">nnUNet</a>, but the Trainer needs to be changed to <code class="docutils literal notranslate"><span class="pre">nnUNetTrainerV2_flare</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># my solution in challenge uses lowres network, but fullres network can also be used</span>
+nnUNet_train 3d_lowres nnUNetTrainerV2_flare TaskXXX_MYTASK FOLD --npz
+</pre></div>
+</div>
+</section>
+<section id="inference">
+<h2>Inference<a class="headerlink" href="#inference" title="永久链接至标题"></a></h2>
+<ol>
+<li><p>Download the trained model from the <a class="reference external" href="https://github.com/tea321000/flare21_solution/blob/main/download.sh">download.sh</a> script or the <a class="reference external" href="https://drive.google.com/file/d/1YW8MsLaYUr6lhfpf_LL6kTelPiuJRhq9/view">Google Drive</a> link(task id is 500):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash download.sh
+</pre></div>
+</div>
+<p>If you download from Google Drive link, you need to put the compressed file into the manually created <code class="docutils literal notranslate"><span class="pre">trained_weight</span></code> folder in <code class="docutils literal notranslate"><span class="pre">flare21_solution</span></code> folder and run <a class="reference external" href="https://github.com/tea321000/flare21_solution/blob/main/download.sh">download.sh</a>.</p>
+</li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">inputs</span></code> folder under <code class="docutils literal notranslate"><span class="pre">flare21_solution</span></code> , put the samples to be predicted into the folder, and run <a class="reference external" href="https://github.com/tea321000/flare21_solution/blob/main/predict.sh">predict.sh</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash predict.sh
+</pre></div>
+</div>
+</li>
+</ol>
+<p>The predictions are saved in the <code class="docutils literal notranslate"><span class="pre">outputs</span></code> folder by default, and the input and output paths can be changed by modifying the script.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../%E5%8D%8A%E7%9B%91%E7%9D%A3/test.html" class="btn btn-neutral float-left" title="test" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2022, Ziqi Zhou.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
