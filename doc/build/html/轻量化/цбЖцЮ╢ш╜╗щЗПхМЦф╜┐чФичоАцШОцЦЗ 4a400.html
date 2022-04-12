@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>框架轻量化使用简明文档 &mdash; paper_code 0.1.0 文档</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/translations.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="prev" title="COVID-19半监督框架使用简明文档" href="../%E5%8D%8A%E7%9B%91%E7%9D%A3/COVID-19%D1%85%D0%9D%D0%9A%D1%87%D0%AB%D0%A1%20d1723.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> paper_code
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="在文档中搜索" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">半监督</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../%E5%8D%8A%E7%9B%91%E7%9D%A3/COVID-19%D1%85%D0%9D%D0%9A%D1%87%D0%AB%D0%A1%20d1723.html">COVID-19半监督框架使用简明文档</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">轻量化</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">框架轻量化使用简明文档</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">数据集的获取</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">框架的安装</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">从源码安装(推荐)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#docker">docker</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">框架的使用</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">任务的建立和预处理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">框架的使用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">（可选）读取训练权重进行预测</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">paper_code</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>框架轻量化使用简明文档</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/轻量化/цбЖцЮ╢ш╜╗щЗПхМЦф╜┐чФичоАцШОцЦЗ 4a400.md.txt" rel="nofollow"> 查看页面源码</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>框架轻量化使用简明文档<a class="headerlink" href="#id1" title="永久链接至标题"></a></h1>
+<p>此文档用于说明如何使用基于<a class="reference external" href="https://github.com/MIC-DKFZ/nnUNet">nnUNet</a>的此框架对<a class="reference external" href="https://flare.grand-challenge.org/">MICCAI 2021 FLARE Challenge:
+Fast and Low GPU memory Abdominal oRgan sEgmentation</a>数据集进行分割。由于新冠肺炎病变数据集以及框架的安装步骤等与前述章节有所重复，因此仅做必要的部分说明。</p>
+<section id="id2">
+<h2>数据集的获取<a class="headerlink" href="#id2" title="永久链接至标题"></a></h2>
+<p>腹部多器官的开源数据集其实不少，其中最耳熟能详的莫过于kits19。但对这些数据集进行设计的神经网络都仅仅只考虑了分割指标，没有对医院部署中的硬件指标进行考虑，有脱离实际生产需要的嫌疑。因此，MICCAI 2021 FLARE Challenge首次提出了将推理速度综合进来考虑的轻量化竞赛。当然，目前学术界还没有对医学图像的轻量化建立标准，因此轻量化到什么程度最佳，时间换空间的最佳折中点在哪里还没有清晰的认识，因此此次比赛只能说是起到抛砖引玉的作用。</p>
+<p>数据集的<a class="reference external" href="https://flare.grand-challenge.org/">官网地址</a>如上，具体获取方法可以参考前述的对应章节。</p>
+</section>
+<section id="id3">
+<h2>框架的安装<a class="headerlink" href="#id3" title="永久链接至标题"></a></h2>
+<p>框架的安装可以参考前述的对应章节以及我<a class="reference external" href="https://github.com/tea321000/flare21_solution">开源的仓库</a>：</p>
+<section id="id4">
+<h3>从源码安装(推荐)<a class="headerlink" href="#id4" title="永久链接至标题"></a></h3>
+<ol>
+<li><p>克隆仓库以及其子仓库 (nnUNet):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone --recursive https://github.com/tea321000/paper_code
+<span class="nb">cd</span> paper_code
+<span class="c1"># if you are updating an existing checkout</span>
+git submodule sync
+git submodule update --init --recursive --jobs <span class="m">0</span>
+</pre></div>
+</div>
+</li>
+<li><p>参照<a class="reference external" href="https://github.com/MIC-DKFZ/nnUNet#installation">原nnUNet仓库</a>的安装教程来安装修改后的nnUNet框架。确保相关的环境变量已经设置好（也可以通过写入到.bashrc来持久化这些环境变量，否则仅在terminal的session上下文中有效）:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># some APIs in the recently updated version of batchgenerators have changed, so it is recommended to use the old version</span>
+pip install <span class="nv">batchgenerators</span><span class="o">==</span><span class="m">0</span>.21
+<span class="nb">cd</span> flare21_solution/nnUNet
+pip install -e .
+<span class="c1"># you can write environment variables into .bashrc</span>
+<span class="nb">export</span> <span class="nv">nnUNet_raw_data_base</span><span class="o">=</span><span class="s2">&quot;/media/fabian/nnUNet_raw&quot;</span>
+<span class="nb">export</span> <span class="nv">nnUNet_preprocessed</span><span class="o">=</span><span class="s2">&quot;/media/fabian/nnUNet_preprocessed&quot;</span>
+<span class="nb">export</span> <span class="nv">RESULTS_FOLDER</span><span class="o">=</span><span class="s2">&quot;/media/fabian/nnUNet_trained_models&quot;</span>
+<span class="c1"># check if the environment variable has been set</span>
+<span class="nb">echo</span> <span class="nv">$nnUNet_raw_data_base</span>
+<span class="nb">echo</span> <span class="nv">$nnUNet_preprocessed</span>
+<span class="nb">echo</span> <span class="nv">$RESULTS_FOLDER</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="docker">
+<h3>docker<a class="headerlink" href="#docker" title="永久链接至标题"></a></h3>
+<p>我也提供了<a class="reference external" href="https://drive.google.com/file/d/1a-atCB_BZkeyzrho2ediEtLzt6rk6YT4/view">docker镜像</a>作为其中的一种安装方式，但这种方式不太利用修改和开发，需要对docker的配置和文件映射拥有一定的熟悉能力，docker比较适用于快速验证指标的场合。可以使用以下指令进行安装:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker image load &lt; ttime_flare_final.tar.gz
+docker container run --gpus <span class="s2">&quot;all&quot;</span> --name ttime --rm -v <span class="nv">$PWD</span>/inputs/:/workspace/inputs/ -v <span class="nv">$PWD</span>/outputs/:/workspace/outputs/ teamname:latest /bin/bash -c <span class="s2">&quot;sh predict.sh&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="id5">
+<h2>框架的使用<a class="headerlink" href="#id5" title="永久链接至标题"></a></h2>
+<p>框架使用的详情可以查看前述的对应章节。此处仅介绍不同之处。</p>
+<section id="id6">
+<h3>任务的建立和预处理<a class="headerlink" href="#id6" title="永久链接至标题"></a></h3>
+<p>此任务中，只具有CT单模态体素图像，标签类别包括背景、肝脏、肾脏、脾脏和胰腺五种类别。根据这一特点，编写转换脚本：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ..
+<span class="c1">#修改downloaded_data_dir为数据集下载路径，Task id默认为601</span>
+vim abdomen1KCT_conversion.py
+<span class="c1">#进行转换</span>
+python abdomen1KCT_conversion.py
+</pre></div>
+</div>
+</section>
+<section id="id7">
+<h3>框架的使用<a class="headerlink" href="#id7" title="永久链接至标题"></a></h3>
+<p>框架的轻量化分为两个阶段，第一部分为框架的训练阶段，第二部分为框架的测试阶段。训练阶段与前述章节没有太大差别，仅需要替换为<code class="docutils literal notranslate"><span class="pre">nnUNetTrainerV2_flare</span></code>训练器：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># my solution in challenge uses lowres network, but fullres network can also be used</span>
+nnUNet_train 3d_lowres nnUNetTrainerV2_flare TaskXXX_MYTASK FOLD --npz
+</pre></div>
+</div>
+<p>测试阶段需要先对模型权重进行算子融合才能进行测试。通过编写脚本，可以方便地将训练好的模型权重进行标准化算子与卷积算子的融合：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#为防止误操作，可在融合前备份模型权重</span>
+python rep_model_convert.py -c checkpoint -o output_checkout -on output_checkout_name
+<span class="c1">#手动进行模型权重的替换，替换后进行正常的预测</span>
+nnUNet_predict -i INPUT_FOLDER -o OUTPUT_FOLDER -t <span class="m">601</span> -m 3d_lowres -tr nnUNetTrainerV2_flare -f <span class="m">4</span>
+</pre></div>
+</div>
+</section>
+<section id="id8">
+<h3>（可选）读取训练权重进行预测<a class="headerlink" href="#id8" title="永久链接至标题"></a></h3>
+<p>当然，也可以使用预先提供的训练模型进行预测：</p>
+<ol>
+<li><p>通过 <a class="reference external" href="https://github.com/tea321000/flare21_solution/blob/main/download.sh">download.sh</a> 脚本或者 <a class="reference external" href="https://drive.google.com/file/d/1YW8MsLaYUr6lhfpf_LL6kTelPiuJRhq9/view">Google Drive</a> 链接下载模型(任务 id 为500):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash download.sh
+</pre></div>
+</div>
+<p>假如从Google Drive进行下载，你会需要手动解压文件到<code class="docutils literal notranslate"><span class="pre">flare21_solution</span></code> 文件夹中的<code class="docutils literal notranslate"><span class="pre">trained_weight</span></code> 子文件夹并运行<a class="reference external" href="https://github.com/tea321000/flare21_solution/blob/main/download.sh">download.sh</a>.</p>
+</li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">flare21_solution</span></code>文件夹下创建 <code class="docutils literal notranslate"><span class="pre">inputs</span></code> 子文件夹，然后将需要预测的样本放入其中，然后运行 <a class="reference external" href="https://github.com/tea321000/flare21_solution/blob/main/predict.sh">predict.sh</a>:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash predict.sh
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../%E5%8D%8A%E7%9B%91%E7%9D%A3/COVID-19%D1%85%D0%9D%D0%9A%D1%87%D0%AB%D0%A1%20d1723.html" class="btn btn-neutral float-left" title="COVID-19半监督框架使用简明文档" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> 上一页</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; 版权所有 2022, Ziqi Zhou.</p>
+  </div>
+
+  利用 <a href="https://www.sphinx-doc.org/">Sphinx</a> 构建，使用了 
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">主题</a>
+    由 <a href="https://readthedocs.org">Read the Docs</a>开发.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

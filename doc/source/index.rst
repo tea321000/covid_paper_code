@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to paper_code's documentation!
+基于数据驱动的多站点CT图像分割代码说明文档
 ======================================
 
 .. toctree::
